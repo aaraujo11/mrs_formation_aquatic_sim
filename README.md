@@ -79,10 +79,10 @@ rosrun mrs_formation_control mrs_formation_control
 ```
 
 Multi-robot launch file architecture:
-
+![multi_launch](https://github.com/aaraujo11/mrs_formation_aquatic_sim/blob/master/images/multi_robot_launch.png)
 
 If you have all dependencies and ROS packages installed, you should see something similar to:
-
+![final_multi_launch](https://github.com/aaraujo11/mrs_formation_aquatic_sim/blob/master/images/gazebo_multi_nav.png)
 
 
 To send a new goal to the team of robots, use the **2D Nav Goal** of Rviz.
