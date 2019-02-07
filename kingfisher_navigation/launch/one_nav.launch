@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+
+
+  <param name="use_sim_time" value="true" />
+    
+  
+  <arg name="robotname" default="robot_0" />
+  
+    
+  <group ns="$(arg robotname)">
+    <!-- Run the map server -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find kingfisher_navigation)/map/walls_map.yaml" required="true">
+        <param name="frame_id" value="$(arg robotname)/odom"/>
+    </node>
+  </group>   
+    
+
+  <include file="$(find kingfisher_navigation)/launch/one_move_base.launch">
+        <arg name="robotname" value="robot_0" />
+  </include>
+    
+  
+    <!--- Run rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find kingfisher_gazebo)/rviz/one_robot_nav.rviz" output="screen"/> 
+    
+</launch>

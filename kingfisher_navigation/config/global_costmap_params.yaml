@@ -1,0 +1,10 @@
+global_costmap:
+  global_frame: odom            #/map
+  robot_base_frame: base_link
+  update_frequency: 1.0
+  static_map: true
+  
+  #for global path planning away from obstacles:
+  cost_scalling_factor: 2.0
+  inflation_radius: 0.6
+  #footprint_padding: -0.1

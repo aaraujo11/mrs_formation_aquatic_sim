@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<launch>
+
+
+  <param name="use_sim_time" value="true" />
+  
+  
+  
+  <!-- Robots namspace -->
+  <arg name="r0" default="robot_0"/>
+  <arg name="r1" default="robot_1"/>
+  <arg name="r2" default="robot_2"/>
+  <arg name="r3" default="robot_3"/>
+  
+   
+  <!-- Robot_0 -->
+  
+  <group ns="$(arg r0)">
+    <!-- Run the map server -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find kingfisher_navigation)/map/walls_map.yaml" required="true">
+        <param name="frame_id" value="$(arg r0)/odom"/>
+    </node>
+  </group>   
+    
+  <include file="$(find kingfisher_navigation)/launch/multi_move_base.launch">
+        <arg name="robotname" value="$(arg r0)" />
+  </include>
+  
+  
+  
+   <!-- Robot_1 --> 
+  
+<group ns="$(arg r1)">
+    <!-- Run the map server -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find kingfisher_navigation)/map/walls_map.yaml" required="true">
+        <param name="frame_id" value="$(arg r1)/odom"/>
+    </node>
+  </group>   
+    
+  <include file="$(find kingfisher_navigation)/launch/multi_move_base.launch">
+        <arg name="robotname" value="$(arg r1)" />
+  </include>
+  
+  
+  <!-- Robot_2 --> 
+  
+ <group ns="$(arg r2)">
+    <!-- Run the map server -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find kingfisher_navigation)/map/walls_map.yaml" required="true">
+        <param name="frame_id" value="$(arg r2)/odom"/>
+    </node>
+  </group>   
+    
+  <include file="$(find kingfisher_navigation)/launch/andre_multi_move_base.launch">
+        <arg name="robotname" value="$(arg r2)" />
+  </include>
+  
+  
+  
+ <!-- Robot_3 --> 
+  
+ <group ns="$(arg r3)">
+    <!-- Run the map server -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find kingfisher_navigation)/map/walls_map.yaml" required="true">
+        <param name="frame_id" value="$(arg r3)/odom"/>
+    </node>
+  </group>   
+    
+  <include file="$(find kingfisher_navigation)/launch/andre_multi_move_base.launch">
+        <arg name="robotname" value="$(arg r3)" />
+  </include>
+  
+  
+    
+  
+    <!--- Run rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find kingfisher_gazebo)/andre_rviz/multi_robot_nav.rviz" output="screen"/> 
+    
+</launch>

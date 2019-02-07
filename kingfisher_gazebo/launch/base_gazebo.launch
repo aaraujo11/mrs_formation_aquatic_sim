@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!-- Base -->
+<launch>
+  <!-- For setting debug level to debug -->
+  <env name="ROSCONSOLE_CONFIG_FILE" value="$(find kingfisher_gazebo)/config/custom_rosconsole.conf"/>
+  
+  <!-- Define Simulation time-->
+  <param name="use_sim_time" value="true" />->
+
+  <!-- Default Arguments -->
+    
+  <arg name="namespace" default="robot_0" />
+  <!-- Generate the tf_prefix from the namespace -->
+  <!--<arg name="tfpre" default="$(arg namespace)_tf" /> -->
+  <!-- Put value on the parameter server in the group's namespace -->
+  <param name="tf_prefix" type="string" value="$(arg namespace)" />
+    
+  <!-- URDF -->
+  <arg name="imu" default="true" />
+  <arg name="gps" default="true" />
+  <arg name="p3d" default="true" />
+  <arg name="microstrain" default="true" />
+  
+  <!-- Spawn Gazebo -->
+  <arg name="initX" default="0.0" />
+  <arg name="initY" default="0.0" />
+  <arg name="initZ" default="1.0" />
+  <arg name="initYaw" default="0.0" />
+  
+  <!-- p3d2nav -->
+  <arg name="origin_lat" default="36.6137" />
+  <arg name="origin_long" default="-121.912" />
+
+  
+  <!-- Define URDF location -->
+  <arg name="urdf" default="$(find kingfisher_gazebo)/urdf/mod_base_gazebo.xacro"/>
+  
+   <!-- Load Gazebo plugins, robot and sensor description -->
+  <param name="robot_description" command="$(find xacro)/xacro $(arg urdf) imu:=$(arg imu) gps:=$(arg gps) microstrain:=$(arg microstrain) p3d:=$(arg p3d)"/>
+  
+  
+    <!-- Start the state publisher node in the namespace - uses the joint states from gazebo along with the URDF model (robot_description) to publish the joint positions to /tf --> 
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+      
+      <param name="publish_frequency" type="double" value="15.0"/>
+    <param name="tf_prefix" type="string" value="$(arg namespace)"/>
+  </node>
+  
+    
+  <!-- Spawn robot in gazebo -->
+  <node name="spawn_kingfisher_model" pkg="gazebo_ros" type="spawn_model"
+	args="-x $(arg initX) -y $(arg initY) -z $(arg initY) -R 0.0 -P 0.0 -Y $(arg initYaw) -unpause -urdf -param robot_description -model kingfisher_$(arg namespace)"/>
+  
+  <!-- Convert cmd_vel to cmd_drive -->
+  <node pkg="kingfisher_utils" type="twist2drive.py" name="twist2drive" output="screen"/>
+  
+  
+  <node pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server" output="screen"/>
+  
+  <!-- p3d2nav node converts from the local Gazebo coordinates to GPS coordinates and generates a message similar to what we expect from the Microstrain sensor (combining GPS and IMU to estimate position and velocity). -->
+  <node pkg="kingfisher_gazebo" type="p3d2nav.py" name="p3d2nav" output="screen">
+   <param name="gazebo_origin_lat" value="$(arg origin_lat)" type="double" />
+   <param name="gazebo_origin_long" value="$(arg origin_long)" type="double" />
+  </node>
+  
+  
+  <!-- USV controller -->
+  <node pkg="kingfisher_control" type="kingfisher_twist_control.py" name="kingfisher_twist_control" output="screen">
+    <param name="yawKp" value="0.2" type="double"/>
+    <param name="yawKi" value="0.4" type="double"/>
+    <param name="yawKd" value="0.0" type="double"/>
+    <param name="velKp" value="0.7" type="double"/>
+    <param name="velKi" value="0.3" type="double"/>
+    <param name="velKd" value="0.0" type="double"/>
+   </node>
+  
+
+</launch>

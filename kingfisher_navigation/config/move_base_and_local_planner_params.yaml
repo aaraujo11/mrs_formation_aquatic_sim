@@ -1,0 +1,45 @@
+########## move_base_params ############
+controller_frequency: 7.0      
+#controller_patience: 15.0       # How long the controller will wait in seconds without receiving a valid control before space-clearing operations are performed.
+#planner_patience: 5.0           # How long the planner will wait in seconds in an attempt to find a valid plan before space-clearing operations are performed.
+footprint_padding: 0.015 
+
+
+
+########## base_local_planner_params ############
+TrajectoryPlannerROS:
+  max_vel_x: 2.0
+  min_vel_x: 0.01
+
+  max_vel_theta: 1.0
+  min_in_place_vel_theta: 0.1
+  #max_vel_y: 0.0        
+  #min_vel_y: 0.0  
+  #max_vel_theta: 2.0
+  #min_vel_theta: -2.0
+  #min_in_place_vel_theta : 0.5
+  #escape_vel: -0.1
+  acc_lim_theta: 5.0                    #default 3.2 
+  acc_lim_x: 5.0                        #default 2.5       
+  acc_lim_y: 0.0                        #default 2.5
+  
+  holonomic_robot: false
+  sim_time: 1.5
+  sim_granularity: 0.025 
+  angular_sim_granularity: 0.025
+  
+  # for some reason this was messing up all my navigation when using prefixes (using the defaults just works):
+  #vx_samples: 3                         #default 3
+  #vy_samples: 0
+  #vtheta_samples: 5                     #default 20
+  
+  meter_scoring: true #false                   #default false  
+  yaw_goal_tolerance: 6.28              #default 0.05 # we don't care about yaw when the robot reaches the goal.
+  xy_goal_tolerance: 0.5                #default 0.10  
+  latch_xy_goal_tolerance: false       #default false 
+  
+  gdist_scale: 0.6                      #default: 0.8 #The weighting for how much the controller should attempt to reach its local goal, also controls speed
+  pdist_scale: 0.8                      #default: 0.6 #The weighting for how much the controller should stay close to the path it was given
+  occdist_scale: 0.1                   #default 0.01 #The weighting for how much the controller should attempt to avoid obstacles
+
+  dwa: true

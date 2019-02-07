@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<!-- Base -->
+<launch>
+  <!-- For setting debug level to debug -->
+  <env name="ROSCONSOLE_CONFIG_FILE" 
+       value="$(find kingfisher_gazebo)/config/custom_rosconsole.conf"/>
+
+  <!-- Define Sim time-->
+  <param name="use_sim_time" value="true" />
+  
+  <!-- Robots namspace -->
+  <arg name="r0" default="robot_0"/>
+  <arg name="r1" default="robot_1"/>
+  <arg name="r2" default="robot_2"/>
+  <arg name="r3" default="robot_3"/>
+  
+  <!-- Emulated GPS position -->
+  <arg name="origin_lat" value="36.6137" />
+  <arg name="origin_long" value="-121.912" />
+
+  <!-- Gazebo -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find kingfisher_gazebo)/worlds/lake.world"/>
+    <arg name="gui" value="true"/>
+    <arg name="verbose" value="true"/>
+  </include>
+  
+  
+ <!-- ROBOT_0  just the first one responsible to create utm2odom (broadcast_utm2odom_transform = true)-->
+ <group ns="$(arg r0)">
+    <include file="$(find kingfisher_gazebo)/launch/base_gazebo.launch">
+       <arg name="namespace" value="$(arg r0)" />
+       <arg name="initX" value="-3.0" />
+       <arg name="initY" value="-3.0" />
+       <arg name="initZ" value="5.0" />
+       <arg name="initYaw" value="0.0" />
+       <arg name="imu" value="true" />
+       <arg name="gps" value="true" />
+       <arg name="p3d" value="true" />
+       <arg name="microstrain" value="true" />
+       <arg name="origin_lat" value="$(arg origin_lat)" />
+       <arg name="origin_long" value="$(arg origin_long)" />
+       </include>
+     
+</group>
+  
+  <!-- Provides tf transforms from utm->odom and odom->base_link -->
+  <node pkg="geonav_transform" type="geonav_transform_node" name="$(arg r0)_geonav_transform_node" clear_params="true" output="screen">
+    <!-- Datum as latitude, longitude [decimal deg.], yaw [ENU, degrees] -->
+    <rosparam param="datum">[36.6137, -121.912, 0.0]</rosparam>
+    <param name="base_link_frame_id" value="$(arg r0)/base_footprint" />
+    <param name="odom_frame_id" value="$(arg r0)/odom" />
+    <param name="broadcast_utm2odom_transform" value="true" />
+    <param name="broadcast_odom2base_transform" value="true" />
+    <!-- Input -->
+    <remap from="nav_odom" to="$(arg r0)/nav_odom" />
+    <!-- Output -->
+    <remap from="geonav_odom" to="$(arg r0)/geonav_odom" />
+    <remap from="geonav_utm" to="$(arg r0)/geonav_utm" />
+  </node>  
+  
+  
+  
+  
+   <!-- ROBOT_1  disable tf (broadcast_utm2odom_transform = false)-->
+ <group ns="$(arg r1)">
+    <include file="$(find kingfisher_gazebo)/launch/andre_base_gazebo.launch">
+       <arg name="namespace" value="$(arg r1)" />
+       <arg name="initX" value="-3.0" />
+       <arg name="initY" value="3.0" />
+       <arg name="initZ" value="5.0" />
+       <arg name="initYaw" value="0.0" />
+       <arg name="imu" value="true" />
+       <arg name="gps" value="true" />
+       <arg name="p3d" value="true" />
+       <arg name="microstrain" value="true" />
+       <arg name="origin_lat" value="$(arg origin_lat)" />
+       <arg name="origin_long" value="$(arg origin_long)" />
+       </include>
+     
+</group>
+  
+  <!-- Provides tf transforms from utm->odom and odom->base_link -->
+  <node pkg="geonav_transform" type="geonav_transform_node" name="$(arg r1)_geonav_transform_node" clear_params="true" output="screen">
+    <!-- Datum as latitude, longitude [decimal deg.], yaw [ENU, degrees] -->
+    <rosparam param="datum">[36.6137, -121.912, 0.0]</rosparam>
+    <param name="base_link_frame_id" value="$(arg r1)/base_footprint" />
+    <param name="odom_frame_id" value="$(arg r1)/odom" />
+    <param name="broadcast_utm2odom_transform" value="false" />
+    <param name="broadcast_odom2base_transform" value="true" />
+    <!-- Input -->
+    <remap from="nav_odom" to="$(arg r1)/nav_odom" />
+    <!-- Output -->
+    <remap from="geonav_odom" to="$(arg r1)/geonav_odom" />
+    <remap from="geonav_utm" to="$(arg r1)/geonav_utm" />
+  </node>  
+  
+  
+  
+  
+  
+     <!-- ROBOT_2  disable tf (broadcast_utm2odom_transform = false)-->
+ <group ns="$(arg r2)">
+    <include file="$(find kingfisher_gazebo)/launch/andre_base_gazebo.launch">
+       <arg name="namespace" value="$(arg r2)" />
+       <arg name="initX" value="3.0" />
+       <arg name="initY" value="3.0" />
+       <arg name="initZ" value="5.0" />
+       <arg name="initYaw" value="0.0" />
+       <arg name="imu" value="true" />
+       <arg name="gps" value="true" />
+       <arg name="p3d" value="true" />
+       <arg name="microstrain" value="true" />
+       <arg name="origin_lat" value="$(arg origin_lat)" />
+       <arg name="origin_long" value="$(arg origin_long)" />
+       </include>
+     
+</group>
+  
+  <!-- Provides tf transforms from utm->odom and odom->base_link -->
+  <node pkg="geonav_transform" type="geonav_transform_node" name="$(arg r2)_geonav_transform_node" clear_params="true" output="screen">
+    <!-- Datum as latitude, longitude [decimal deg.], yaw [ENU, degrees] -->
+    <rosparam param="datum">[36.6137, -121.912, 0.0]</rosparam>
+    <param name="base_link_frame_id" value="$(arg r2)/base_footprint" />
+    <param name="odom_frame_id" value="$(arg r2)/odom" />
+    <param name="broadcast_utm2odom_transform" value="false" />
+    <param name="broadcast_odom2base_transform" value="true" />
+    <!-- Input -->
+    <remap from="nav_odom" to="$(arg r2)/nav_odom" />
+    <!-- Output -->
+    <remap from="geonav_odom" to="$(arg r2)/geonav_odom" />
+    <remap from="geonav_utm" to="$(arg r2)/geonav_utm" />
+  </node>  
+  
+  
+  
+  
+  
+<!-- ROBOT_3  disable tf (broadcast_utm2odom_transform = false)-->
+ <group ns="$(arg r3)">
+    <include file="$(find kingfisher_gazebo)/launch/andre_base_gazebo.launch">
+       <arg name="namespace" value="$(arg r3)" />
+       <arg name="initX" value="3.0" />
+       <arg name="initY" value="-3.0" />
+       <arg name="initZ" value="5.0" />
+       <arg name="initYaw" value="0.0" />
+       <arg name="imu" value="true" />
+       <arg name="gps" value="true" />
+       <arg name="p3d" value="true" />
+       <arg name="microstrain" value="true" />
+       <arg name="origin_lat" value="$(arg origin_lat)" />
+       <arg name="origin_long" value="$(arg origin_long)" />
+       </include>
+     
+</group>
+  
+  <!-- Provides tf transforms from utm->odom and odom->base_link -->
+  <node pkg="geonav_transform" type="geonav_transform_node" name="$(arg r3)_geonav_transform_node" clear_params="true" output="screen">
+    <!-- Datum as latitude, longitude [decimal deg.], yaw [ENU, degrees] -->
+    <rosparam param="datum">[36.6137, -121.912, 0.0]</rosparam>
+    <param name="base_link_frame_id" value="$(arg r3)/base_footprint" />
+    <param name="odom_frame_id" value="$(arg r3)/odom" />
+    <param name="broadcast_utm2odom_transform" value="false" />
+    <param name="broadcast_odom2base_transform" value="true" />
+    <!-- Input -->
+    <remap from="nav_odom" to="$(arg r3)/nav_odom" />
+    <!-- Output -->
+    <remap from="geonav_odom" to="$(arg r3)/geonav_odom" />
+    <remap from="geonav_utm" to="$(arg r3)/geonav_utm" />
+  </node>  
+  
+  
+
+</launch>

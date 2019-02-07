@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<launch>
+    
+ <param name="use_sim_time" value="true" />
+ 
+ <arg name="robotname" default="robot_0" />
+    
+    
+ <group ns="$(arg robotname)">
+     
+     
+    <!--Navigation-->
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" >
+        
+        <rosparam file="$(find kingfisher_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find kingfisher_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find kingfisher_navigation)/config/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find kingfisher_navigation)/config/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find kingfisher_navigation)/config/move_base_and_local_planner_params.yaml" command="load" /> 
+        <!--<remap from="map" to="/map"/>-->
+        <!--<remap from="utm" to="/utm"/>-->
+
+        <!--<remap from="$(arg robotname)/map" to="/map"/>-->
+        
+         <!-- Override MOVE_BASE Frame Params to include "robot_X" prefix -->
+         <param name="/local_costmap/robot_base_frame" value="/$(arg robotname)/base_link"/>
+         <param name="/global_costmap/global_frame" value="/$(arg robotname)/odom"/>
+         <param name="/global_costmap/robot_base_frame" value="/$(arg robotname)/base_link"/>   
+         <param name="/local_costmap/global_frame" value="/$(arg robotname)/odom"/>
+          -->
+    </node>
+    
+    
+</group>   
+    
+    
+</launch>

@@ -1,0 +1,16 @@
+obstacle_range: 2.5             #default: 2.5
+raytrace_range: 3.0             #default: 3.0 
+max_obstacle_height: 1.4        #default: 2.0
+
+map_type: voxel
+
+# Configure Voxel Grid: (http://wiki.ros.org/costmap_2d/kinectic/obstacles#VoxelCostmapPlugin)
+publish_voxel_map: true
+z_voxels: 4
+z_resolution: 0.35
+
+footprint: [[1.0, 1.0], [-1.0,1.0], [-1.0,-1.0], [1.0,-1.0]]
+
+inflation_radius: 0.3
+cost_scaling_factor: 1.0
+footprint_padding: -0.1
