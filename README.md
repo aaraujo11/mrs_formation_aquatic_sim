@@ -21,7 +21,7 @@ rosrun gazebo_ros gazebo
 
 Moving on to the necessary ROS packages, 
 ```
-sudo apt-get install ros-kinetic-hector-gazebo-plugins  ros-kinetic-geographic-info ros-kinetic-tf2-geometry-msgs ros-kinetic-move-base ros-kinetic-interactive-marker-twist-server python-pip
+sudo apt-get install ros-kinetic-hector-gazebo-plugins  ros-kinetic-geographic-info ros-kinetic-tf2-geometry-msgs ros-kinetic-move-base ros-kinetic-interactive-marker-twist-server python-pip ros-kinetic-map-server
 ```
 
 Then after get the following repos into your ROS workspace (by default *~/catkin_ws/src/*) using git commands:
